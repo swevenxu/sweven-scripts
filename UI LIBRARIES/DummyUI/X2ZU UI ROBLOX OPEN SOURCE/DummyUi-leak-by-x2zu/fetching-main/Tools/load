@@ -1,0 +1,566 @@
+
+--[[
+	2025 C:Fetching Tools by @96soul
+	2025 C:User Interface by @Dummyrme
+]]--
+
+
+--IGNORE THIS
+getgenv, identifyexecutor, setclipboard, makefolder, isfolder, getthreadidentity = getgenv, identifyexecutor, setclipboard, makefolder, isfolder, getthreadidentity
+writefile, isfile, readfile, delfile, sethiddenproperty, getnilinstances = writefile, isfile, readfile, delfile, sethiddenproperty, getnilinstances
+getgc, getscriptbytecode, request = getgc, getscriptbytecode, request
+----------------------------------------------------
+
+-- Wait for Utils
+repeat task.wait()
+until game:IsLoaded() and game:GetService("Players") and game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.PlayerGui and game:GetService("Players").LocalPlayer.Backpack;
+
+--Check
+if game:GetService("CoreGui"):FindFirstChild("Dummy Kawaii") then
+	game:GetService("CoreGui"):FindFirstChild("Dummy Kawaii"):Destroy()
+end;
+
+-- Services
+local Env_: GlobalEnvironment = getgenv();
+local Players: Service = game:GetService("Players");
+local VirtualInputManager: Service = game:GetService("VirtualInputManager");
+local CollectionService: Service = game:GetService("CollectionService");
+local ReplicatedStorage: Service = game:GetService("ReplicatedStorage");
+local TeleportService: Service = game:GetService("TeleportService");
+local RunService: Service = game:GetService("RunService");
+local VirtualUser: Service = game:GetService("VirtualUser");
+local HttpService: Service = game:GetService("HttpService");
+local TweenService: Service = game:GetService("TweenService");
+local CoreGui: Service = game:GetService("CoreGui");
+local UserInputService : KeyboardService = game:GetService("UserInputService");
+
+-- ServerInfo
+local PlaceId: GameId = game.PlaceId;
+local JobId: ServerId = game.JobId;
+local Camera: Camera = workspace.CurrentCamera;
+local Tick: Time = tick();
+
+-- LocalPlayer
+local LocalPlayer: Me = Players.LocalPlayer;
+local Backpack: MyBackpack = LocalPlayer.Backpack;
+local PlayerGui: MyUserInterface = LocalPlayer.PlayerGui;
+local PlayerScript: MyScript = LocalPlayer.PlayerScripts;
+local User: MyUser = LocalPlayer.Name;
+local DisplayName: MyName = LocalPlayer.DisplayName;
+local PlayerId: MyId = LocalPlayer.UserId;
+local Team: MyTeam = tostring(LocalPlayer.Team);
+
+-- Config path
+local Folder: SaveFolder = "Fetching'Script/Config/" .. PlayerId .. ".json";
+
+-- Character
+local Character: MyBody = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait();
+local HumanoidRootPart: MyRootPart = Character:WaitForChild("HumanoidRootPart");
+local Humanoid: MyLife = Character:WaitForChild("Humanoid");
+
+-- Executor
+local Executor: Executor = string.upper(identifyexecutor());
+local Blacklist_Executor: BlacklistExec = table.find({ "SOLARA", "XENO" }, Executor);
+
+--UI Library
+local Library: table = loadstring(game:HttpGet("https://raw.githubusercontent.com/MerrySubs4t/fetching/refs/heads/main/Tools/Framework.luau"))();
+local Console: table = loadstring(game:HttpGet("https://raw.githubusercontent.com/MerrySubs4t/fetching/refs/heads/main/Tools/Console"))()
+local Exec : table = loadstring(game:HttpGet("https://raw.githubusercontent.com/MerrySubs4t/fetching/refs/heads/main/Tools/Exec"))()
+
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+	Character = newCharacter;
+	HumanoidRootPart = newCharacter:WaitForChild("HumanoidRootPart");
+	Humanoid = newCharacter:WaitForChild("Humanoid");
+end);
+
+Env_.Emulator = "404 : Forbiden"
+if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+	Env_.Emulator = "Mobile"
+elseif UserInputService.KeyboardEnabled and not UserInputService.TouchEnabled then
+	Env_.Emulator = "PC"
+else
+	Env_.Emulator = "Emulator"
+end
+
+if Env_.Fecthing then return warn("รันซ้ำหาพ่อมึง") end;Env_.Fetching = true
+
+-- Config
+Env_.Configs = {};
+
+Save = function(key, value)
+	if key ~= nil then
+		Env_.Configs[key] = value;
+	end;
+	if not isfolder("Fetching'Script") then
+		makefolder("Fetching'Script");
+	end;
+	writefile(Folder, HttpService:JSONEncode(Env_.Configs));
+end;
+
+Load = function()
+	if not isfile(Folder) then Save(); end;
+	return HttpService:JSONDecode(readfile(Folder));
+end;
+
+Default = function(v, a)
+	if type(v) == "table" then
+		for i, k in pairs(v) do
+			if Env_.Configs[i] == nil then
+				Env_.Configs[i] = k;
+			end;
+		end;
+	else
+		if Env_.Configs[v] == nil then
+			Env_.Configs[v] = a;
+		end;
+	end;
+end;
+
+DeleteSettings = function()
+	if isfile(Folder) then
+		delfile(Folder);
+	end;
+end;
+
+-- Loop utility
+Loop = function(callback: func)
+	while task.wait() do
+		callback();
+	end;
+end;
+
+safeGetInstance = function(pathStr: string): Instance?
+	local success, result = pcall(function()
+		return loadstring("return " .. pathStr)()
+	end)
+	if success and typeof(result) == "Instance" then
+		return result
+	end
+	return nil
+end
+
+C = function() return Env_.Configs;end;
+
+Env_.Configs = Load()
+
+-- Window
+local UIConsole : Console = Console:Console(true)
+local Window : Window = Library:Window({Title = "Fetching's Tools - @96soul",Desc = 'UI Manager - © 2025 Dummyrme, All rights reserved.',Icon = 128185233852701,Theme = 'Dark',Config = {Keybind = Enum.KeyCode.LeftControl,Size = UDim2.new(0, 530,0, 400)},CloseUIButton = {Enabled = true,Text = 'Toggle'}})
+local Execz : Script = Exec:Executor(true, "print('Hello, 96soul')")
+Window:SelectTab(1)
+Execz:SetVisible(false)
+
+--Tabs
+local Infromations = Window:Tab({Title = 'Informations', Icon = 107927309418429}) do
+	Infromations:Section({Title = 'Informarions'})
+	Infromations:Code({Title = "Type",Code = 
+		"Device : " .. Env_.Emulator .. "\n"
+		.. "Name : " .. User .. "(" .. DisplayName .. ")" .. "\n"
+		.. "Player ID : " .. PlayerId .. "\n"
+		.. "Client Id : " .. tostring(game:GetService("RbxAnalyticsService"):GetClientId()) .. "\n"
+		.. "Account Age : " .. tostring(LocalPlayer.AccountAge) .. " Days" .. "\n"
+		.. "Executor : " .. identifyexecutor() .. " - " .. tostring(getthreadidentity())
+	})
+	Infromations:Code({Title = "Server",Code = 
+		"PlaceId : " .. PlaceId .. "\n"
+		.. "JobId : " .. JobId .. "\n"
+		.. "Max Players : " .. Players.MaxPlayers
+	})
+	Infromations:Button({Title = 'Clipboard PlaceId',Callback = function()
+		pcall(setclipboard, tostring(PlaceId))
+		Window:Notify({Title = "PlaceId",Desc = "Succes:  clip to board",Time = 3})
+	end})
+	Infromations:Button({Title = 'Clipboard JobId',Callback = function()
+		pcall(setclipboard, tostring(JobId))
+		Window:Notify({Title = "JobId",Desc = "Succes:  clip to board",Time = 3})
+	end})
+	Infromations:Section({Title = 'Misc'})
+	Infromations:Button({Title = 'Discord', Desc = "Join Discord Community",Callback = function()
+		pcall(setclipboard,"https://discord.gg/uy6TP4ew7d")
+		Window:Notify({Title = "Discord",Desc = "Succes:  clip to board",Time = 3})
+	end})
+	Infromations:Button({Title = 'Remove Configs',Desc = "Reset Configs and Use Factory Value.",Callback = function()
+		pcall(DeleteSettings)
+	end})
+end
+
+Window:Line()
+
+local Tools = Window:Tab({Title = 'Tools', Icon = 97459673019824}) do
+	Tools:Section({Title = 'Scripting'})
+	Tools:Toggle({Title = 'Script Editor',Desc = 'Edit Script with Execute Button.',Value = C()['ED'],Callback = function(v)
+		C()['ED'] = v
+		Save('ED', v)
+		if v then
+			Execz:SetVisible(true)
+		else
+			Execz:SetVisible(false)
+		end
+	end})
+	Tools:Toggle({Title = 'Console',Desc = 'UI Console with Toggle',Value = C()['CS'],Callback = function(v)
+		C()['CS'] = v
+		Save('CS', v)
+		if v then
+			UIConsole:SetVisible(true)
+		else
+			UIConsole:SetVisible(false)
+		end
+	end})
+	Tools:Section({Title = 'Tools'})
+	Tools:Button({Title = 'Infinite Yield',Desc = "Scripting with Admin Command.",Callback = function(v)
+		Window:Notify({Title = "Infinite Yield",Desc = "Hold a Second",Time = 3})
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+	end})
+	Tools:Button({Title = 'Dex - Explorer',Desc = "Ultimate Debuging Suit.",Callback = function(v)
+		Window:Notify({Title = "Dex - Explorer",Desc = "Hold a Second",Time = 3})
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+	end})
+	if not Blacklist_Executor then
+		Tools:Button({Title = 'Hydroxide',Desc = "Debuging Suit & Remote.",Callback = function(v)
+			Window:Notify({Title = "Hydroxide",Desc = "Hold a Second",Time = 3})
+			local owner = "Upbolt"
+			local branch = "revision"
+			local function webImport(file)
+				return loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/%s/Hydroxide/%s/%s.lua"):format(owner, branch, file)), file .. '.lua')()
+			end
+			webImport("init")
+			webImport("ui/main")
+		end})
+		Tools:Button({Title = 'Remote SPY',Desc = "Hook Remotes & Storage Remotes.",Callback = function(v)
+			Window:Notify({Title = "Remote SPY",Desc = "Hold a Second",Time = 3})
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua"))()
+		end})
+		Tools:Button({Title = 'Audio Logger',Desc = "Hook Audio & Storage Audio.",Callback = function(v)
+			Window:Notify({Title = "Audio Logger",Desc = "Hold a Second",Time = 3})
+			loadstring(game:HttpGet(('https://raw.githubusercontent.com/infyiff/backup/main/audiologger.lua'),true))()
+		end})
+	end
+	Tools:Section({Title = 'Automatic Execute'})
+	Tools:Toggle({Title = 'Dex - Explorer',Desc = 'Ultimate Debuging Suit.',Value = C()['Dex'],Callback = function(v)
+		C()['Dex'] = v
+		Save('Dex', v)
+	end})
+	Tools:Toggle({Title = 'Remote SPY',Desc = 'Hook Remotes & Storage Remotes.',Value = C()['RSPY'],Callback = function(v)
+		C()['RSPY'] = v
+		Save('RSPY', v)
+	end})
+	task.spawn(function()
+		if C()['Dex'] then
+			Window:Notify({Title = "Dex - Explorer",Desc = "Hold a Second",Time = 3})
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+		end
+		if C()['RSPY'] then
+			Window:Notify({Title = "Remote SPY",Desc = "Hold a Second",Time = 3})
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/SimpleSpyV3/main.lua"))()
+		end
+	end)
+end
+
+Window:Line()
+
+task.spawn(function()
+	local Positions = Window:Tab({Title = 'Position', Icon = 98398560997612}) do
+		Positions:Section({Title = 'Position'})
+		local MyPosnow = Positions:Code({Title = "Position",Code = [[nil]]})
+		local MyCFramenow = Positions:Code({Title = "CFrame",Code = [[nil]]})
+		local MyPositionnow = Positions:Code({Title = "Vector3",Code = [[nil]]})
+		local WPath = Positions:Code({Title = "Teleport",Code = [[nil]]})
+		local LockVector = Positions:Code({Title = "Look Vector",Code = [[nil]]})
+		Positions:Section({Title = 'Teleport'})
+		Default('Position', '0,0,0')
+		Positions:Textbox({Title = 'Box Position',Desc = 'Paste Your Positions Here!',Placeholder = 'Paste Position',Value = C()['Position'],ClearTextOnFocus = false,Callback = function(v)
+			C()['Position'] = v
+			Save('Position', v)
+		end})
+		Positions:Button({Title = 'Teleport to Position',Callback = function()
+			local x, y, z = C()['Position']:match("([^,]+),([^,]+),([^,]+)")
+			if x and y and z then
+				pcall(function()
+					if Character then
+						HumanoidRootPart.CFrame = CFrame.new(Vector3.new(tonumber(x), tonumber(y), tonumber(z)))
+					end
+				end)
+			end
+		end})
+		Loop(function()
+			pcall(function()
+				local pos = HumanoidRootPart.Position
+				local x,y,z = math.floor(pos.X),math.floor(pos.Y),math.floor(pos.Z)
+				local RealtimePos = string.format("%d, %d, %d", x, y, z)
+				local look = workspace.CurrentCamera.CFrame.LookVector
+				MyPosnow:SetCode(RealtimePos)
+				MyCFramenow:SetCode("CFrame.new" .. "(" .. RealtimePos .. ")")
+				MyPositionnow:SetCode("Vector3.new" .. "(" .. RealtimePos .. ")")
+				WPath:SetCode("game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = " .. "CFrame.new" .. "(" .. RealtimePos .. ")")
+				LockVector:SetCode(string.format("%.5f, %.5f, %.5f", look.X, look.Y, look.Z))
+			end)
+		end)
+	end
+end)
+
+Window:Line()
+
+task.spawn(function()
+	local _FindFirstChild = Window:Tab({Title = 'FindFirstChild', Icon = "file-search"}) do
+		_FindFirstChild:Section({Title = 'Setting'})
+		Default('FindMethod', "FindFirstChild")
+		Default('Deep', false)
+		Default('Path_FindFirstChild', 'workspace')
+		Default('Path_FindFirstChild_Index', '96soul')
+		_FindFirstChild:Dropdown({Title = 'Select FindFirstChild Method',List = {"FindFirstChild", "FindFirstChildOfClass", "FindFirstChildWhichIsA"},Value = C()['FindMethod'],Callback = function(v)
+			C()['FindMethod'] = v
+			Save('FindMethod', v)
+		end})
+		_FindFirstChild:Textbox({Title = 'Path',Desc = 'Paste Your Path Here!',Placeholder = 'Paste Path',Value = C()['Path_FindFirstChild'],ClearTextOnFocus = false,Callback = function(v)
+			C()['Path_FindFirstChild'] = v
+			Save('Path_FindFirstChild', v)
+		end})
+		_FindFirstChild:Textbox({Title = 'Object',Desc = 'What You want to Find?',Placeholder = 'Paste Index',Value = C()['Path_FindFirstChild_Index'],ClearTextOnFocus = false,Callback = function(v)
+			C()['Path_FindFirstChild_Index'] = v
+			Save('Path_FindFirstChild_Index', v)
+		end})
+		_FindFirstChild:Toggle({Title = 'Deep FindFirstChild',Desc = 'Use 2nd argument of FindFirstChild to search recursively.',Value = C()['Deep'],Callback = function(v)
+			C()['Deep'] = v
+			Save('Deep', v)
+		end})
+		_FindFirstChild:Section({Title = 'Output'})
+		local Output = _FindFirstChild:Code({Title = "Output",Code = "nil"})
+		Loop(function()
+			local path = C()['Path_FindFirstChild']
+			local index = C()['Path_FindFirstChild_Index']
+			local method = C()['FindMethod']
+			local deep = C()['Deep']
+			local code = "N/A"
+			if deep then
+				code = "local Result = " .. path .. ":" .. method .. "(" .. '"' .. index .. '"' .. ", " .. tostring(deep) .. ")"
+			else
+				code = "local Result = " .. path .. ":" .. method .. "(" .. '"' .. index .. '"' .. ")"
+			end
+			Output:SetCode(code)
+		end)
+	end
+end)
+task.spawn(function()
+	local _for = Window:Tab({Title = 'for _, v', Icon = "history"}) do
+		Default('Key', "_")
+		Default('Value', "v")
+		Default('LoopType', "pairs")
+		Default('Path_F', 'workspace')
+		Default('Path_func', 'GetChildren()')
+		local allvalue = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+		local allkey = {"_", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+		_for:Dropdown({Title = 'Key',List = allkey,Value = C()['Key'],Callback = function(v)
+			C()['Key'] = v
+			Save('Key', v)
+		end})
+		_for:Dropdown({Title = 'Value',List = allvalue,Value = C()['Value'],Callback = function(v)
+			C()['Value'] = v
+			Save('Value', v)
+		end})
+		_for:Dropdown({Title = 'Loop Type',List = {"pairs", "ipairs", "next"},Value = C()['LoopType'],Callback = function(v)
+			C()['LoopType'] = v
+			Save('LoopType', v)
+		end})
+		_for:Textbox({Title = 'Path',Desc = 'Paste Your Path Here!',Placeholder = 'Enter Path',Value = C()['Path_F'],ClearTextOnFocus = false,Callback = function(v)
+			C()['Path_F'] = v
+			Save('Path_F', v)
+		end})
+		_for:Dropdown({Title = 'Children Type',List = {"GetChildren()", "GetDescendants()"},Value = C()['Path_func'],Callback = function(v)
+			C()['Path_func'] = v
+			Save('Path_func', v)
+		end})
+		_for:Section({Title = 'Output'})
+		local Output = _for:Code({Title = "Output", Code = "nil"})
+		Loop(function()
+			local path = C()['Path_F']
+			local key = C()['Key']
+			local looptype = C()['LoopType']
+			local value = C()['Value']
+			local func = C()['Path_func']
+			local outputCode = "N/A"
+			outputCode = 'for ' .. key .. ", " .. value .. " in " .. looptype .. "(" .. path .. ":" .. func .. ")"  .. " do" .."\n" .. "\n" .. "end"
+			Output:SetCode(outputCode)
+		end)
+	end
+end)
+
+task.spawn(function()
+	local _loop = Window:Tab({Title = 'Loops', Icon = "infinity"}) do
+		_loop:Section({Title = 'Setting'})
+		Default('Loop Delay', 0.01)
+		_loop:Slider({Title = 'Loop Delay',Min = 0,Max = 60,Value = C()['Loop Delay'],Rounding = 2,Callback = function(v)
+			C()['Loop Delay'] = v
+			Save('Loop Delay', v)
+		end})
+		_loop:Toggle({Title = 'pcall - (Protect Caller)',Desc = 'Enable It, if Your Code May have Error.',Value = C()['pcall loop'],Callback = function(v)
+			C()['pcall loop'] = v
+			Save('pcall loop', v)
+		end})
+		_loop:Section({Title = 'Output'})
+		local Output = _loop:Code({Title = "Output", Code = "nil"})
+		Loop(function()
+			local delay = C()['Loop Delay']
+			local code = "N/A"
+			if C()['pcall loop'] then
+				code = 'task.spawn(function()' .. "\n" .. 
+					"	while task.wait(" .. tostring(C()['Loop Delay']) .. ")" .. " do" .. "\n" .. 
+					"		pcall(function()" .. "\n" ..
+					"			--code here" .. "\n" .. 
+					"		end)" .. "\n" ..
+					"	end" .. "\n" .. 
+					"end)"
+			else
+				code = 'task.spawn(function()' .. "\n" .. 
+					"	while task.wait(" .. tostring(C()['Loop Delay']) .. ")" .. " do" .. "\n" .. 
+					"		--code here" .. "\n" .. 
+					"	end" .. "\n" .. 
+					"end)"
+			end
+			Output:SetCode(code)
+		end)
+	end
+end)
+
+Window:Line()
+
+task.spawn(function()
+	if not Blacklist_Executor then
+		-- Credit to Cutie[Ayayoyaoyaoyaoayaoayoayoayaoyaaa]
+		assert(getscriptbytecode, "Exploit not supported.")
+		local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+		local function enc(data)
+			return ((data:gsub('.', function(x) 
+				local r,b='',x:byte()
+				for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
+				return r;
+			end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
+				if (#x < 6) then return '' end
+				local c=0
+				for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
+				return b:sub(c+1,c+1)
+			end)..({ '', '==', '=' })[#data%3+1])
+		end
+
+		local API: string = "https://api.realaya.xyz/v1"
+		local last_call = 0
+
+		local function call(ayaType: string, scriptPath: Script | ModuleScript | LocalScript): string
+			local success: boolean, bytecode: string = pcall(getscriptbytecode, scriptPath)
+
+			if not success then
+				return `-- Failed to get script bytecode, error:\n\n--[[\n{bytecode}\n--]]`
+			end
+
+			local time_elapsed = os.clock() - last_call
+			if time_elapsed <= .5 then
+				task.wait(.5 - time_elapsed)
+			end
+
+			local httpResult = request({
+				Url = API .. ayaType,
+				Body = enc(bytecode),
+				Method = "POST",
+				Headers = {
+					["Content-Type"] = "text/plain"
+				},
+			})
+			last_call = os.clock()
+
+			if httpResult.StatusCode ~= 200 then
+				return `-- Error occurred while requesting the API, error:\n\n--[[\n{httpResult.Body}\n--]]`
+			else
+				return httpResult.Body
+			end
+		end
+
+		local function decompile(scriptPath: Script | ModuleScript | LocalScript): string
+			return call("/decompile", scriptPath)
+		end
+
+		task.spawn(function()
+			local _LocalScript = Window:Tab({Title = 'Decompiler', Icon = "lock-open"}) do
+				_LocalScript:Section({Title = 'Decompiler'})
+				Default('LocalScript', "game.Players.LocalPlayer.PlayerScripts.MyScript")
+				Default('ResultDp', "404 - Forbiden")
+				_LocalScript:Textbox({Title = 'Path to Script',Desc = 'Use full path to ModuleScript or LocalScript',Placeholder = 'e.g. game.Players.LocalPlayer.PlayerScripts.MyScript',Value = C()['LocalScript'],ClearTextOnFocus = false,Callback = function(v)
+					C()['LocalScript'] = v
+					Save('LocalScript', v)
+				end})
+				local Output
+				_LocalScript:Button({Title = 'Decompiler',Desc = "Start Decompiler Script.",Callback = function()
+					local instance = safeGetInstance(C()['LocalScript'])
+					if instance then
+						C()['ResultDp'] = decompile(instance)
+						Window:Notify({Title = "Decompiler",Desc = "Success",Time = 3})
+					else
+						C()['ResultDp'] = "404 - Forbiden"
+						Window:Notify({Title = "Decompiler",Desc = "Failed",Time = 3})
+					end
+					Output:SetCode(tostring(C()['ResultDp']))
+				end})
+				_LocalScript:Section({Title = 'Output'})
+				Output = _LocalScript:Code({Title = "Output", Code = C()['ResultDp']})
+			end
+		end)
+	end
+end)
+Window:Line()
+task.spawn(function()
+	local _ColletionService = Window:Tab({Title = 'GetTags', Icon = "tag"}) do
+		_ColletionService:Section({Title = 'Collections Service'})
+		local allTags = {}
+		Default('Path GetTags', "game")
+		local AllT
+		_ColletionService:Dropdown({Title = 'Value',List = {"game", "workspace", "game.Players"},Value = C()['Path GetTags'],Callback = function(v)
+			C()['Path GetTags'] = v
+			Save('Path GetTags', v)
+		end})
+		_ColletionService:Button({Title = 'GetTags',Desc = "Get All Tags in Value.",Callback = function()
+			allTags = {}
+			local instance = safeGetInstance(C()['Path GetTags'])
+			if not instance then AllT:SetCode("Instance not found.") return end
+			for _, obj in ipairs(instance:GetDescendants()) do
+				local tags = CollectionService:GetTags(obj)
+				for _, tag in ipairs(tags) do
+					if not table.find(allTags, tag) then
+						table.insert(allTags, tag)
+					end
+				end
+			end
+			AllT:SetCode(table.concat(allTags, "\n"))
+		end})
+		_ColletionService:Section({Title = 'Output'})
+		AllT = _ColletionService:Code({Title = "Output", Code = 'Waiting for tag scan...'})
+	end
+end)
+
+task.spawn(function()
+	local _nil = Window:Tab({Title = 'Getnil', Icon = "variable"}) do
+		_nil:Section({Title = 'GetnilInstance'})
+		local allTags = {}
+		local uniqueNames = {}
+		for _, obj in ipairs(getnilinstances()) do
+			if not uniqueNames[obj.Name] then
+				uniqueNames[obj.Name] = true
+				table.insert(allTags, obj.Name)
+			end
+		end
+		local AllT
+		_nil:Button({Title = 'GetnilInstance',Desc = "Show all unique object names from getnilinstances().",Callback = function()
+			table.clear(allTags)
+			table.clear(uniqueNames)
+			for _, obj in ipairs(getnilinstances()) do
+				if not uniqueNames[obj.Name] then
+					uniqueNames[obj.Name] = true
+					table.insert(allTags, obj.Name)
+				end
+			end
+			if AllT then
+				AllT:SetCode(table.concat(allTags, "\n"))
+			end
+		end})
+		_nil:Section({Title = 'Output'})
+		AllT = _nil:Code({Title = "Output", Code = '404 - Forbidden'})
+		AllT:SetCode(table.concat(allTags, "\n"))
+	end
+end)
