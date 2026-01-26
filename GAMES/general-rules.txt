@@ -1,0 +1,82 @@
+========================================
+        GENERAL RULES & BEST PRACTICES
+========================================
+
+1. BACKUP BEFORE EDITING
+   - Always create a backup copy before making changes to any file
+   - Use naming convention: filename_backup_YYYYMMDD.ext
+   - Store backups in a separate folder when possible
+
+2. VERSION CONTROL
+   - Commit changes frequently with meaningful messages
+   - Never commit broken or untested code
+   - Use branches for new features or experiments
+
+3. FILE ORGANIZATION
+   - Keep files organized in logical folder structures
+   - Use clear, descriptive file names
+   - Avoid special characters and spaces in file names
+
+4. DOCUMENTATION
+   - Comment your code clearly
+   - Update documentation when making changes
+   - Keep a changelog for significant updates
+
+5. TESTING
+   - Test changes before finalizing
+   - Verify backups are working and complete
+   - Check for unintended side effects
+
+6. SAFETY PRACTICES
+   - Double-check before deleting any file
+   - Review changes before saving
+   - Keep original files until new version is verified
+
+7. COLLABORATION
+   - Communicate changes to team members
+   - Follow established naming conventions
+   - Respect file locks and permissions
+
+========================================
+        DEBUGGING TECHNIQUES
+========================================
+
+1. SCANNER FILE METHOD
+   - Create a separate scanner file to analyze/debug code
+   - Output results to clipboard for easy access
+   - Example: setclipboard(result) or toclipboard(output)
+   - Useful for inspecting variables, tables, and function returns
+
+2. LOGGING & OUTPUT
+   - Add print statements at key points in code
+   - Log values to a file for later review
+   - Use timestamps in logs to track execution flow
+
+3. ISOLATE THE PROBLEM
+   - Comment out sections to narrow down issues
+   - Test individual functions separately
+   - Create minimal reproduction scripts
+
+4. BREAKPOINT DEBUGGING
+   - Use debugger tools when available
+   - Step through code line by line
+   - Watch variable values as they change
+
+5. ERROR HANDLING
+   - Wrap suspicious code in pcall/xpcall
+   - Check error messages carefully
+   - Handle edge cases explicitly
+
+6. COMPARE WORKING VS BROKEN
+   - Keep a working version to compare against
+   - Use diff tools to spot changes
+   - Revert to last working state if needed
+
+7. DUMP DATA STRUCTURES
+   - Create functions to serialize tables/objects
+   - Copy complex data to clipboard for inspection
+   - Format output for readability
+
+========================================
+        Last Updated: 2026-01-19
+========================================

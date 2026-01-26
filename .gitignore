@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node (some tools may exist in scripts)
+node_modules/
+
+# Build / temp
+dist/
+build/
+.tmp/
+tmp_rovodev_*
+
+# Roblox/Lua tooling caches
+*.luac
+*.out
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Env
+.env
+.env.*

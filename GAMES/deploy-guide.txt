@@ -1,0 +1,45 @@
+SNOE PROJECT - DEPLOY GUIDE
+============================
+
+1. OBFUSCATE WITH PROMETHEUS
+----------------------------
+cd "SWEVEN/Prometheus"
+
+# For Deadly Delivery:
+lua cli.lua "../GAMES/DEADLY DELIVERY/snoe_ddelivery_dummy.lua" --out "../GAMES/DEADLY DELIVERY/snoe_ddelivery_dummy_obf.lua"
+
+# For The Forge:
+lua cli.lua "../GAMES/THE FORGE/snoe_forge_dummy.lua" --out "../GAMES/THE FORGE/snoe_forge_dummy_obf.lua"
+
+# For 99 Nights:
+lua cli.lua "../GAMES/99 NIGHTS/snoe_99nights_dummy.lua" --out "../GAMES/99 NIGHTS/snoe_99nights_dummy_obf.lua"
+
+
+2. COPY TO SNOE REPO
+--------------------
+cd "SWEVEN/SNOE REPO"
+
+# For Deadly Delivery:
+cp "../GAMES/DEADLY DELIVERY/snoe_ddelivery_dummy_obf.lua" "games/deadly-delivery.obfuscated.lua"
+
+# For The Forge:
+cp "../GAMES/THE FORGE/snoe_forge_dummy_obf.lua" "games/the-forge.obfuscated.lua"
+
+# For 99 Nights:
+cp "../GAMES/99 NIGHTS/snoe_99nights_dummy_obf.lua" "games/99-nights.obfuscated.lua"
+
+
+3. PUSH TO GITHUB
+-----------------
+cd "SWEVEN/SNOE REPO"
+
+git add .
+git commit -m "Update script name - description of changes"
+git push
+
+
+NOTES
+-----
+- Remote is set to: github-snoeexploits:swevenxu/thesnoeproject.git
+- SSH key: ~/.ssh/id_ed25519_snoeexploits
+- If push fails, check SSH config in ~/.ssh/config

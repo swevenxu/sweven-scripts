@@ -1,0 +1,45 @@
+=== KIRO CODING RULES - FOLLOW THESE ===
+
+1. DON'T REWRITE ENTIRE FUNCTIONS - Only change the specific lines needed. Rewriting breaks things.
+
+2. ASK BEFORE ASSUMING - If unclear what user wants, ask first. Don't guess and waste edits.
+
+3. TEST LOGIC IN HEAD FIRST - Before writing code, think through the flow. Will this actually work?
+
+4. ONE CHANGE AT A TIME - Don't make 5 changes at once. Make one, verify it works, then next.
+
+5. DON'T BREAK EXISTING LOOPS - When editing inside loops, be careful not to mess up the loop structure.
+
+6. PRESERVE WORKING CODE - If something works, don't touch it unless asked.
+
+7. READ THE EXACT CODE FIRST - Before replacing, read what's actually there. Don't assume.
+
+8. VARIABLE SCOPE MATTERS - Don't move variables around carelessly. Check where they're used.
+
+9. MATCH TIMING/DELAYS - When user says "1.5 seconds", use exactly 1.5. Don't change it.
+
+10. CONFIRM UNDERSTANDING - Repeat back what user wants before coding. "So you want X, right?"
+
+11. SMALL EDITS > BIG REWRITES - strReplace with minimal changes is better than rewriting whole sections.
+
+12. DON'T ADD FEATURES NOT ASKED FOR - Stick to what user requested. No extras.
+
+13. WHEN STUCK, EXPLAIN OPTIONS - Don't keep trying the same thing. Explain what's not working and ask user.
+
+14. BACKUP BEFORE BIG CHANGES - Remind user to backup or create one before major edits.
+
+15. USE EXISTING PATTERNS - If the codebase does something a certain way, follow that pattern.
+
+16. SCAN BEFORE ASSUMING - Create scanner/finder functions to discover remotes, services, or objects dynamically. Don't blindly add references to things that might not exist.
+
+17. AVOID HARDCODING - Use variables, configs, or discovery patterns instead of hardcoded values. Names, paths, and references should be dynamic where possible.
+
+18. BUILD DISCOVERY HELPERS - When working with game hierarchies (RemoteEvents, services, UI elements), write a scanner that finds what's available first, then use those results.
+
+19. VALIDATE EXISTENCE - Before using a remote/service/object, check if it exists. Use FindFirstChild or similar patterns instead of assuming paths.
+
+20. CONFIG OVER MAGIC STRINGS - Put names, paths, and identifiers in a config table at the top. Makes changes easier and code more maintainable.
+
+21. SCANNERS MUST BE HAS A RESULT SETCLIPBOARD - When creating scanner/finder scripts, make them standalone and ready to paste directly into executor. No dependencies on other code.
+
+22. STRICTLY APPLY THIS RULES THRU ALL OF OUR SESSIONS
